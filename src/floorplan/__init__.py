@@ -1,5 +1,5 @@
 from .nerfstudio import preprocess
-from .uploader import upload_video
+from .upload import upload_video
 from .base import app, VIDEOS_PATH
 
 

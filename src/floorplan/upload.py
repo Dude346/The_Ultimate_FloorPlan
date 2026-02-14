@@ -9,7 +9,7 @@ from pathlib import Path
 import secrets
 import string
 
-import modal
+from .base import vol, VIDEOS_PATH, VOLUME_PATH
 
 
 def upload_video(local_mp4_path: str) -> str:
@@ -21,24 +21,14 @@ def upload_video(local_mp4_path: str) -> str:
 
     Returns the generated six-letter id for the uploaded video.
     """
-    p = Path(local_mp4_path).expanduser().resolve()
-    if not p.exists():
-        raise FileNotFoundError(p)
-
-    try:
-        pass
-    except Exception as exc:
-        raise RuntimeError(
-            "Modal SDK is required to upload videos. Please `pip install modal`."
-        ) from exc
-
-    from .base import vol, VIDEOS_PATH
+    path = Path(local_mp4_path).expanduser().resolve()
+    if not path.exists():
+        raise FileNotFoundError(path)
 
     video_id = "".join(secrets.choice(string.ascii_lowercase) for _ in range(6))
-    remote_path = f"{VIDEOS_PATH.rstrip('/')}/{video_id}.mp4"
+    remote_path = VIDEOS_PATH / f"{video_id}.mp4"
 
-    # Use the batch upload context manager which will efficiently upload the file to the volume
     with vol.batch_upload() as batch:
-        batch.put_file(p, remote_path)
+        batch.put_file(path, remote_path.relative_to(VOLUME_PATH))
 
     return video_id
