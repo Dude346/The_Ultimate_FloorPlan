@@ -10,8 +10,7 @@ import subprocess
 
 from .base import (
     app,
-    preprocess_image,
-    splat_image,
+    ns_image,
     vol,
     VOLUME_PATH,
     VIDEOS_PATH,
@@ -21,9 +20,7 @@ from .base import (
 )
 
 
-@app.function(
-    image=preprocess_image, timeout=3600, volumes={str(VOLUME_PATH): vol}, gpu=GPU
-)
+@app.function(image=ns_image, timeout=3600, volumes={str(VOLUME_PATH): vol}, gpu=GPU)
 def preprocess(video_id: str) -> dict:
     """Process a video (by generated ID) with nerfstudio's `ns-process-data` CLI.
 
@@ -59,7 +56,7 @@ def get_only_subdir(path):
     return subdir
 
 
-@app.function(image=splat_image, timeout=3600, volumes={str(VOLUME_PATH): vol}, gpu=GPU)
+@app.function(image=ns_image, timeout=3600, volumes={str(VOLUME_PATH): vol}, gpu=GPU)
 def splat(video_id: str) -> dict:
     """Run nerfstudio's splatfacto training and export a PLY.
 

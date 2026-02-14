@@ -10,9 +10,6 @@ SPLAT_PATH = VOLUME_PATH / "splat"
 
 GPU = "any"
 
-preprocess_image = modal.Image.from_registry(
-    "ghcr.io/nerfstudio-project/nerfstudio:latest"
-)
-splat_image = modal.Image.from_registry("ghcr.io/nerfstudio-project/nerfstudio:latest")
+ns_image = modal.Image.from_registry("ghcr.io/nerfstudio-project/nerfstudio:latest")
 
 vol = modal.Volume.from_name("floorplan-volume", create_if_missing=True)
