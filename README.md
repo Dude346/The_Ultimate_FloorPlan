@@ -10,6 +10,10 @@
 - `uv add PACKAGE` where `PACKAGE` might be `modal` or `torch`
     - `uv sync` to sync installed packages
 
+### Code
+
+- `uv run ruff format .` to format
+
 ### Modal.com Storage
 
 - `modal token new`
