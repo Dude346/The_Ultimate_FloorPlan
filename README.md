@@ -21,6 +21,12 @@ to connect your local environment to your Modal account.
 - With your virtual environment activated,
 run `modal volume create floorplan-volume`.
 
+### Generate 3D Assets
+
+- `uv run modal run generate_3d_asset/modal_shape_e_generate.py --prompt "INSERT_PROMPT" --guidance-scale 18 --karras-steps 96 --output-path “"/generated_assets/INSERT_FILE_NAME.ply"` to generate an asset with the Shap-E model
+  
+- `uv run modal run generate_3d_asset/modal_point_e_generate.py --prompt "INSERT_PROMPT" --karras-steps 96 --grid-size 96 --output-path "/generated_assets/INSERT_FILE_NAME.ply"` to generate an asset with the Point-E model
+
 # Quotes
 
 > Ashwin is the alpha wolf.
