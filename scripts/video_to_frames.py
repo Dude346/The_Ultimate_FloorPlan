@@ -57,5 +57,3 @@ def video_to_frames_opencv(
     print(f"Saved {saved_count} frames to {output_dir}")
 
     return output_dir
-
-video_to_frames_opencv("IMG_5754.mov", fps=2, max_width=1280)
