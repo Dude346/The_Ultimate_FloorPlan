@@ -1,4 +1,7 @@
-.DS_Store
+# Python
+__pycache__/
 
 # Testing files
-tests/
+/tests/
+
+.DS_Store
