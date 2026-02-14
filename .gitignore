@@ -1,1 +1,7 @@
+# Python
+__pycache__/
+
+# Testing files
+/tests/
+
 .DS_Store
