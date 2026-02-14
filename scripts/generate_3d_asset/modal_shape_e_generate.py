@@ -31,7 +31,9 @@ image = (
 )
 
 app = modal.App(APP_NAME, image=image)
-model_cache_volume = modal.Volume.from_name("shape-e-model-cache", create_if_missing=True)
+model_cache_volume = modal.Volume.from_name(
+    "shape-e-model-cache", create_if_missing=True
+)
 
 
 @app.function(

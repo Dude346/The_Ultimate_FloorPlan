@@ -25,7 +25,9 @@ image = (
 )
 
 app = modal.App(APP_NAME, image=image)
-model_cache_volume = modal.Volume.from_name("point-e-model-cache", create_if_missing=True)
+model_cache_volume = modal.Volume.from_name(
+    "point-e-model-cache", create_if_missing=True
+)
 
 
 @app.function(
@@ -34,7 +36,10 @@ model_cache_volume = modal.Volume.from_name("point-e-model-cache", create_if_mis
     volumes={MODEL_CACHE_PATH: model_cache_volume},
 )
 def generate_point_e_mesh_bytes(
-    prompt: str, guidance_scale: float = 3.0, karras_steps: int = 64, grid_size: int = 64
+    prompt: str,
+    guidance_scale: float = 3.0,
+    karras_steps: int = 64,
+    grid_size: int = 64,
 ) -> bytes:
     import os
     import tempfile
@@ -56,7 +61,9 @@ def generate_point_e_mesh_bytes(
     base_model = model_from_config(MODEL_CONFIGS[base_name], device)
     base_model.eval()
     base_diffusion = diffusion_from_config(DIFFUSION_CONFIGS[base_name])
-    base_model.load_state_dict(load_checkpoint(base_name, device, cache_dir=MODEL_CACHE_PATH))
+    base_model.load_state_dict(
+        load_checkpoint(base_name, device, cache_dir=MODEL_CACHE_PATH)
+    )
 
     upsampler_name = "upsample"
     upsampler_model = model_from_config(MODEL_CONFIGS[upsampler_name], device)
@@ -88,7 +95,9 @@ def generate_point_e_mesh_bytes(
     sdf_name = "sdf"
     sdf_model = model_from_config(MODEL_CONFIGS[sdf_name], device)
     sdf_model.eval()
-    sdf_model.load_state_dict(load_checkpoint(sdf_name, device, cache_dir=MODEL_CACHE_PATH))
+    sdf_model.load_state_dict(
+        load_checkpoint(sdf_name, device, cache_dir=MODEL_CACHE_PATH)
+    )
     mesh = marching_cubes_mesh(
         pc=point_cloud,
         model=sdf_model,
