@@ -1,7 +1,13 @@
 import modal
+from pathlib import Path
 
 app = modal.App("floorplan")
-image = (
+VOLUME_PATH = Path("/volume")
+VIDEOS_PATH = VOLUME_PATH / "videos"
+PREPROCESS_PATH = VOLUME_PATH / "preprocess"
+GPU = "any"
+
+preprocess_image = (
     modal.Image.debian_slim(python_version="3.11")
     .apt_install(
         "pkg-config",

@@ -1,8 +1,6 @@
-from .nerfstudio import run_nerfstudio, main as preprocess_main
-from .uploader import upload_video, main as upload_main
-from .base import app
-
-__all__ = ["run_nerfstudio", "upload_video"]
+from .nerfstudio import preprocess
+from .uploader import upload_video
+from .base import app, VIDEOS_PATH
 
 
 def main():
@@ -10,27 +8,44 @@ def main():
 
     Usage examples:
       python -m floorplan upload tests/x.mp4
-      python -m floorplan preprocess x.mp4
+      python -m floorplan preprocess abcdef
 
     Behavior:
-      - upload: uploads a local MP4 into the volume at videos/<basename>
-      - preprocess: invokes nerfstudio in Modal on a file already present in the volume under videos/.
-        Pass a bare filename (e.g. "x.mp4") and the function will look for videos/x.mp4 inside the volume.
+      - upload: uploads a local MP4 into the volume at videos/<generated_id>.mp4
+      - preprocess: invokes nerfstudio in Modal on file identified by the generated id.
     """
     import sys
+    import argparse
+    import modal
 
     if len(sys.argv) < 2:
         print("Usage: python -m floorplan {upload|preprocess} ...")
         sys.exit(1)
 
     cmd = sys.argv[1]
-    # Remove the subcommand from sys.argv so submodule parsers work correctly
-    sys.argv = [sys.argv[0]] + sys.argv[2:]
+    args_list = sys.argv[2:]
 
     if cmd == "upload":
-        upload_main()
+        parser = argparse.ArgumentParser(prog="floorplan-upload")
+        parser.add_argument("mp4_path", help="Local path to MP4")
+        parsed = parser.parse_args(args_list)
+        video_id = upload_video(parsed.mp4_path)
+        print(video_id)
+        print(f"Container path: {VIDEOS_PATH}/{video_id}.mp4")
     elif cmd == "preprocess":
-        preprocess_main()
+        parser = argparse.ArgumentParser(prog="floorplan-preprocess")
+        parser.add_argument(
+            "video_id", help="Six-letter video id to preprocess (stored in videos/)"
+        )
+        parsed = parser.parse_args(args_list)
+        video_id = parsed.video_id.lstrip("/")
+        print(
+            f"Triggering nerfstudio for volume path: {VIDEOS_PATH}/{video_id}.mp4 (call passes '{video_id}')"
+        )
+        modal.enable_output()
+        with app.run():
+            result = preprocess.remote(video_id)
+        print("nerfstudio result:", result)
     else:
         print(f"Unknown command: {cmd}")
         print("Usage: python -m floorplan {upload|preprocess} ...")
