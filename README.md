@@ -16,3 +16,8 @@
 to connect your local environment to your Modal account.
 - With your virtual environment activated,
 run `modal volume create floorplan-volume`.
+
+# Quotes
+
+> Ashwin is the alpha wolf.
+> *Kian Alizadeh*
