@@ -6,7 +6,7 @@
 
 - `uv venv` to create a virtual environment
     - Run `.venv/Scripts/activate` on Windows
-    or `.venv/bin/activate` on macOS and Windows
+    or `source .venv/bin/activate` on macOS and Windows
 - `uv add PACKAGE` where `PACKAGE` might be `modal` or `torch`
     - `uv sync` to sync installed packages
 
