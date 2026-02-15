@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Floorplan Studio</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <div id="busyOverlay" class="busy-overlay hidden">
+        <div class="busy-card">
+          <div class="busy-spinner"></div>
+          <div id="busyText" class="busy-text">Loading...</div>
+        </div>
+      </div>
+
+      <button id="sidebarToggleButton" class="sidebar-toggle" type="button">Workspace</button>
+      <div id="sidebarScrim" class="sidebar-scrim"></div>
+
+      <aside id="controlPanel" class="control-panel">
+        <div class="control-panel-body">
+          <div class="brand">Floorplan Studio</div>
+          <p class="tagline">Upload room scans, generate assets from prompts, and place them live</p>
+
+          <label class="control-label" for="sceneUploadInput">Scene source</label>
+          <input id="sceneUploadInput" class="text-input" type="file" accept=".ply" />
+
+          <div class="input-row">
+            <select id="savedScenesSelect" class="text-input"></select>
+            <button id="loadSavedSceneButton" class="action-btn secondary compact">Load</button>
+          </div>
+          <div class="field-hint">Upload a new PLY or choose a saved scene, then load</div>
+
+          <label class="control-label" for="promptInput">Design object</label>
+          <textarea id="promptInput" class="text-input textarea" placeholder="A modern green office chair"></textarea>
+          <button id="generateAssetButton" class="action-btn">Generate and insert</button>
+
+          <div id="frontendStatus" class="frontend-status"></div>
+        </div>
+
+        <div class="control-panel-footer">
+          <label class="control-label" for="apiBase">API URL</label>
+          <input id="apiBase" class="text-input" value="http://localhost:8000" placeholder="http://localhost:8000" />
+        </div>
+      </aside>
+
+      <main class="viewer-host">
+        <div id="overlay" class="overlay">
+          <button id="enterButton" class="enter-button">Enter</button>
+          <p class="overlay-hint">Space workspace · WASD move · E up · C down · Shift sprint · F pick · G place · + scale · Esc unlock</p>
+        </div>
+
+        <header class="topbar">
+          <div class="title">PLY Mesh Viewer</div>
+          <div class="actions">
+            <label class="file-btn" for="fileInput">Open PLY</label>
+            <input id="fileInput" type="file" accept=".ply" />
+          </div>
+        </header>
+
+        <div id="status" class="status">Loading viewer ...</div>
+
+        <div id="scaleDialog" class="scale-dialog hidden">
+          <div class="scale-title">Scale Held Asset</div>
+          <label class="scale-label" for="scaleInput">Scale multiplier (e.g. 0.5 = half size, 2 = 2x)</label>
+          <input id="scaleInput" class="scale-input" type="number" min="0.01" step="0.1" value="2" />
+          <div class="scale-actions">
+            <button id="scaleApplyButton" class="scale-btn">Apply</button>
+            <button id="scaleCancelButton" class="scale-btn scale-btn-secondary">Cancel</button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

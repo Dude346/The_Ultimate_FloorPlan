@@ -23,7 +23,7 @@ renderer.toneMappingExposure = 1.1;
 document.body.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0e1116);
+scene.background = new THREE.Color(0xffffff);
 
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 5000);
 camera.position.set(0, 1.5, 3);
@@ -32,13 +32,13 @@ const viewportSize = new THREE.Vector2();
 
 const controls = new PointerLockControls(camera, document.body);
 
-scene.add(new THREE.HemisphereLight(0xffffff, 0x445066, 0.85));
-scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+scene.add(new THREE.HemisphereLight(0xffffff, 0xe2e8f0, 0.95));
+scene.add(new THREE.AmbientLight(0xffffff, 0.45));
 const dirLight = new THREE.DirectionalLight(0xffffff, 0.75);
 dirLight.position.set(3, 5, 2);
 scene.add(dirLight);
 
-const grid = new THREE.GridHelper(20, 20, 0x3a4558, 0x252c38);
+const grid = new THREE.GridHelper(20, 20, 0xcbd5e1, 0xe2e8f0);
 grid.position.y = -0.001;
 scene.add(grid);
 
@@ -61,23 +61,48 @@ gizmoCamera.lookAt(0, 0, 0);
 const gizmoRoot = new THREE.Group();
 gizmoScene.add(gizmoRoot);
 
-const gizmoLight = new THREE.AmbientLight(0xffffff, 0.9);
-gizmoScene.add(gizmoLight);
+function createRoundedRectShape(x, y, width, height, radius) {
+  const r = Math.min(radius, width * 0.5, height * 0.5);
+  const shape = new THREE.Shape();
+  shape.moveTo(x + r, y);
+  shape.lineTo(x + width - r, y);
+  shape.quadraticCurveTo(x + width, y, x + width, y + r);
+  shape.lineTo(x + width, y + height - r);
+  shape.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+  shape.lineTo(x + r, y + height);
+  shape.quadraticCurveTo(x, y + height, x, y + height - r);
+  shape.lineTo(x, y + r);
+  shape.quadraticCurveTo(x, y, x + r, y);
+  return shape;
+}
+
+const gizmoFrameShape = createRoundedRectShape(-1.9, -1.9, 3.8, 3.8, 0.36);
 const gizmoBg = new THREE.Mesh(
-  new THREE.PlaneGeometry(3.4, 3.4),
-  new THREE.MeshBasicMaterial({ color: 0x0a0e14, transparent: true, opacity: 0.62, depthWrite: false }),
+  new THREE.ShapeGeometry(gizmoFrameShape),
+  new THREE.MeshBasicMaterial({ color: 0xffffff, depthWrite: false, depthTest: false, toneMapped: false }),
 );
-gizmoBg.position.z = -1.0;
+gizmoBg.position.z = -2.0;
 gizmoScene.add(gizmoBg);
 
-const axisLen = 1.2;
-gizmoRoot.add(new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(), axisLen, 0xff5a5a, 0.34, 0.2));
-gizmoRoot.add(new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(), axisLen, 0x66e26f, 0.34, 0.2));
-gizmoRoot.add(new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(), axisLen, 0x4f95ff, 0.34, 0.2));
+const gizmoBorder = new THREE.LineLoop(
+  new THREE.BufferGeometry().setFromPoints(gizmoFrameShape.getPoints(64)),
+  new THREE.LineBasicMaterial({ color: 0xcbd5e1, depthWrite: false, depthTest: false, toneMapped: false }),
+);
+gizmoBorder.position.z = -1.95;
+gizmoScene.add(gizmoBorder);
 
-const planeMaterialXY = new THREE.MeshBasicMaterial({ color: 0x5b72ff, transparent: true, opacity: 0.14, side: THREE.DoubleSide, depthWrite: false });
-const planeMaterialXZ = new THREE.MeshBasicMaterial({ color: 0x50d07c, transparent: true, opacity: 0.14, side: THREE.DoubleSide, depthWrite: false });
-const planeMaterialYZ = new THREE.MeshBasicMaterial({ color: 0xff8b73, transparent: true, opacity: 0.14, side: THREE.DoubleSide, depthWrite: false });
+const gizmoLight = new THREE.AmbientLight(0xffffff, 0.9);
+gizmoScene.add(gizmoLight);
+const axisLen = 0.86;
+const axisHeadLength = 0.26;
+const axisHeadWidth = 0.18;
+gizmoRoot.add(new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(), axisLen, 0xff3b30, axisHeadLength, axisHeadWidth));
+gizmoRoot.add(new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(), axisLen, 0x22c55e, axisHeadLength, axisHeadWidth));
+gizmoRoot.add(new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(), axisLen, 0x2563eb, axisHeadLength, axisHeadWidth));
+
+const planeMaterialXY = new THREE.MeshBasicMaterial({ color: 0x2563eb, transparent: true, opacity: 0.18, side: THREE.DoubleSide, depthWrite: false });
+const planeMaterialXZ = new THREE.MeshBasicMaterial({ color: 0x22c55e, transparent: true, opacity: 0.18, side: THREE.DoubleSide, depthWrite: false });
+const planeMaterialYZ = new THREE.MeshBasicMaterial({ color: 0xff3b30, transparent: true, opacity: 0.18, side: THREE.DoubleSide, depthWrite: false });
 
 const planeXY = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.9), planeMaterialXY);
 planeXY.position.set(0.45, 0.45, 0);
@@ -91,6 +116,7 @@ planeYZ.position.set(0, 0.45, 0.45);
 planeYZ.rotation.y = Math.PI / 2;
 gizmoRoot.add(planeYZ);
 
+
 function createAxisLabel(text, fillColor) {
   const size = 96;
   const canvas = document.createElement("canvas");
@@ -101,12 +127,12 @@ function createAxisLabel(text, fillColor) {
   ctx.clearRect(0, 0, size, size);
   ctx.beginPath();
   ctx.arc(size / 2, size / 2, size * 0.37, 0, Math.PI * 2);
-  ctx.fillStyle = "rgba(8,12,18,0.85)";
+  ctx.fillStyle = "rgba(255,255,255,1)";
   ctx.fill();
-  ctx.lineWidth = 5;
+  ctx.lineWidth = 7;
   ctx.strokeStyle = fillColor;
   ctx.stroke();
-  ctx.font = "bold 44px monospace";
+  ctx.font = "700 48px Inter, ui-sans-serif, system-ui, sans-serif";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillStyle = fillColor;
@@ -115,20 +141,20 @@ function createAxisLabel(text, fillColor) {
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   const sprite = new THREE.Sprite(
-    new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false, depthTest: false }),
+    new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false, depthTest: false, toneMapped: false }),
   );
-  sprite.scale.set(0.42, 0.42, 1);
+  sprite.scale.set(0.33, 0.33, 1);
   return sprite;
 }
 
-const labelX = createAxisLabel("X", "#ff7a7a");
-labelX.position.set(1.45, 0, 0);
+const labelX = createAxisLabel("X", "#ff3b30");
+labelX.position.set(1.04, 0, 0);
 gizmoRoot.add(labelX);
-const labelY = createAxisLabel("Y", "#85ef88");
-labelY.position.set(0, 1.45, 0);
+const labelY = createAxisLabel("Y", "#22c55e");
+labelY.position.set(0, 1.04, 0);
 gizmoRoot.add(labelY);
-const labelZ = createAxisLabel("Z", "#7db1ff");
-labelZ.position.set(0, 0, 1.45);
+const labelZ = createAxisLabel("Z", "#2563eb");
+labelZ.position.set(0, 0, 1.04);
 gizmoRoot.add(labelZ);
 
 let currentMesh = null;
@@ -364,13 +390,15 @@ function renderOrientationGizmo() {
   renderer.getSize(viewportSize);
   const width = viewportSize.x;
   const height = viewportSize.y;
-  const size = Math.round(Math.min(width, height) * 0.19);
-  const margin = 12;
+  const size = Math.round(Math.min(width, height) * 0.25);
+  const margin = 0;
   const x = width - size - margin;
   const y = height - size - margin;
 
   gizmoRoot.quaternion.copy(camera.quaternion).invert();
 
+  const prevAutoClear = renderer.autoClear;
+  renderer.autoClear = false;
   renderer.clearDepth();
   renderer.setScissorTest(true);
   renderer.setViewport(x, y, size, size);
@@ -378,6 +406,7 @@ function renderOrientationGizmo() {
   renderer.render(gizmoScene, gizmoCamera);
   renderer.setScissorTest(false);
   renderer.setViewport(0, 0, width, height);
+  renderer.autoClear = prevAutoClear;
 }
 
 function pickUpAssetInView() {
@@ -632,7 +661,24 @@ function computePointSize(geometry, hasSplatScales) {
   const diag = bbox.getSize(new THREE.Vector3()).length();
   const base = hasSplatScales ? diag * 0.0018 : diag * 0.001;
   const multiplier = hasSplatScales ? POINT_DENSITY_MULTIPLIER_SPLAT : POINT_DENSITY_MULTIPLIER_RAW;
-  return THREE.MathUtils.clamp(base * multiplier, 0.001, 0.12);
+  return THREE.MathUtils.clamp(base * multiplier, 0.0035, 0.12);
+}
+
+function normalizePointCloudContrast(colorArray) {
+  if (!colorArray || colorArray.length < 3) return;
+  let lumaSum = 0;
+  const count = colorArray.length / 3;
+  for (let i = 0; i < colorArray.length; i += 3) {
+    lumaSum += 0.2126 * colorArray[i] + 0.7152 * colorArray[i + 1] + 0.0722 * colorArray[i + 2];
+  }
+  const avgLuma = lumaSum / count;
+  if (avgLuma <= 0.78) return;
+
+  // White viewer background can wash out very bright point clouds.
+  const darken = 0.68;
+  for (let i = 0; i < colorArray.length; i += 1) {
+    colorArray[i] = clamp01(colorArray[i] * darken);
+  }
 }
 
 function applyPointDensityScale() {
@@ -844,6 +890,7 @@ function buildPointCloudFromGeometry(geometry, { isSplatLike }) {
 
   const finalPositions = writeCount === count ? positions : positions.slice(0, writeCount * 3);
   const finalColors = writeCount === count ? colors : colors.slice(0, writeCount * 3);
+  normalizePointCloudContrast(finalColors);
 
   const pointsGeometry = new THREE.BufferGeometry();
   pointsGeometry.setAttribute("position", new THREE.Float32BufferAttribute(finalPositions, 3));
@@ -937,6 +984,62 @@ function loadGeometryFromArrayBuffer(arrayBuffer, label) {
   const denoiseSuffix = denoisedCount > 0 ? `, cleaned ${denoisedCount.toLocaleString()} ${denoiseLabel}` : "";
   setStatus(`Loaded ${label} (${count.toLocaleString()} vertices, mode=${mode}, faces=${faceCount.toLocaleString()}, rotX=${rotDeg}deg${denoiseSuffix})`);
 }
+
+function placeAssetRootNearCamera(assetRoot) {
+  if (!assetRoot) return;
+  camera.getWorldDirection(tmpDropForward);
+  if (tmpDropForward.lengthSq() < 1e-8) {
+    tmpDropForward.set(0, 0, -1);
+  } else {
+    tmpDropForward.normalize();
+  }
+  const dropDistance = 1.4;
+  const targetCenter = tmpWorldTarget.copy(camera.position).addScaledVector(tmpDropForward, dropDistance);
+
+  assetRoot.updateMatrixWorld(true);
+  const bbox = new THREE.Box3().setFromObject(assetRoot);
+  if (!bbox.isEmpty()) {
+    bbox.getCenter(tmpBoxCenter);
+    targetCenter.sub(tmpBoxCenter.sub(assetRoot.getWorldPosition(tmpWorldPos)));
+  }
+
+  if (assetRoot.parent) {
+    tmpLocalTarget.copy(targetCenter);
+    assetRoot.parent.worldToLocal(tmpLocalTarget);
+    assetRoot.position.copy(tmpLocalTarget);
+  } else {
+    assetRoot.position.copy(targetCenter);
+  }
+}
+
+function addAssetFromArrayBuffer(arrayBuffer, label = "generated_asset.ply", assetType = "generated_asset") {
+  const header = readPlyHeader(arrayBuffer);
+  const faceCount = parseFaceCountFromHeader(header);
+  const headerSplat = isNerfstudioSplatHeader(header);
+  const geometry = loader.parse(arrayBuffer);
+
+  const hasIndexFaces = Boolean(geometry.index && geometry.index.count >= 3);
+  const attrNames = Object.keys(geometry.attributes ?? {});
+  const attrSplat = attrNames.includes("f_dc_0") && attrNames.includes("opacity") && attrNames.includes("scale_0");
+  const isSplatLike = headerSplat || attrSplat;
+  const shouldRenderAsMesh = faceCount > 0 || hasIndexFaces;
+
+  const { object } = shouldRenderAsMesh
+    ? buildMeshFromGeometry(geometry)
+    : buildPointCloudFromGeometry(geometry, { isSplatLike });
+
+  const assetRoot = addAssetToGroup(object, assetType);
+  applySceneRotation();
+  placeAssetRootNearCamera(assetRoot);
+  setSelection(assetRoot);
+  setStatus(`Inserted ${label} as ${assetRoot.userData?.assetId ?? "asset"} (press F to pick, G to place).`);
+  return assetRoot;
+}
+
+window.viewerApi = {
+  loadSceneFromArrayBuffer: loadGeometryFromArrayBuffer,
+  addAssetFromArrayBuffer,
+};
 
 async function loadDefaultModel() {
   try {

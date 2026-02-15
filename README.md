@@ -111,3 +111,45 @@ Viewer controls:
 - Scale dialog: `Esc`/`Cancel` closes without changing scale
 - `Esc`: unlock cursor
 - Top-right gizmo: world `X/Y/Z` + plane orientation (`XY/XZ/YZ`)
+
+## New backend (`backend/`)
+
+Simple FastAPI service that wraps the existing Modal Shap-E generator script:
+
+- `POST /generate-ply` with JSON body:
+  - `prompt` (string, required)
+  - `guidance_scale` (float, optional, default `18`)
+  - `karras_steps` (int, optional, default `96`)
+- `GET /health`
+
+Run locally:
+
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn app:app --reload --port 8000
+```
+
+Deploy on Modal:
+
+```bash
+cd backend
+modal serve modal_app.py
+```
+
+## New frontend (`frontend/`)
+
+Vite web app that reuses the existing `viewer/main.js` engine and adds:
+
+- startup-style side panel UI
+- local browser persistence of uploaded room `.ply` files (IndexedDB)
+- prompt input that calls backend `POST /generate-ply`
+- generated mesh insertion into the live viewer as movable assets
+
+Run:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
