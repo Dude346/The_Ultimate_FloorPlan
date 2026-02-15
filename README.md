@@ -27,6 +27,44 @@ run `modal volume create floorplan-volume`.
   
 - `uv run modal run generate_3d_asset/modal_point_e_generate.py --prompt "INSERT_PROMPT" --karras-steps 96 --grid-size 96 --output-path "/generated_assets/INSERT_FILE_NAME.ply"` to generate an asset with the Point-E model
 
+### Add Generated Assets Into Existing Scene Meshes
+
+```bash
+cd <repo-root>
+```
+
+Default (high quality):
+
+```bash
+uv run python scripts/generate_and_place_shap_e_asset.py \
+  examples/Bathroom_Mesh.ply \
+  "Green Office Chair" \
+  --output examples/Bathroom_With_Green_Office_Chair.ply
+```
+
+Optional stronger quality:
+
+```bash
+uv run python scripts/generate_and_place_shap_e_asset.py \
+  examples/Bathroom_Mesh.ply \
+  "Green Office Chair" \
+  --guidance-scale 20 \
+  --karras-steps 128 \
+  --output examples/Bathroom_With_Green_Office_Chair_strong.ply
+```
+
+Optional placement tuning:
+
+```bash
+uv run python scripts/generate_and_place_shap_e_asset.py \
+  examples/Bathroom_Mesh.ply \
+  "Green Office Chair" \
+  --target-footprint-ratio 0.08 \
+  --offset-x 0.1 \
+  --offset-z -0.1 \
+  --output examples/Bathroom_With_Green_Office_Chair_tuned.ply
+```
+
 # Quotes
 
 > Ashwin is the alpha wolf.
