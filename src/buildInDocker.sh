@@ -63,7 +63,7 @@ cd eigen_build &&\
 
 apt-get -yq update
 apt-get -yq install software-properties-common
-add-apt-repository -yq universe
+add-apt-repository -y universe
 apt-get -yq update
 
 # Boost
@@ -92,9 +92,9 @@ git clone https://github.com/cdcseacave/VCG.git vcglib
 
 # Build from stable openMVS release or the latest commit from the develop branch
 if [[ "$MASTER" == "1" ]]; then
-    git clone https://github.com/cdcseacave/openMVS.git --branch master
+    git clone --recursive https://github.com/cdcseacave/openMVS.git --branch master
 else
-    git clone https://github.com/cdcseacave/openMVS.git --branch develop
+    git clone --recursive https://github.com/cdcseacave/openMVS.git --branch develop
 fi
 
 mkdir openMVS_build
