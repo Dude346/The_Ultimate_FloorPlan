@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Floorplan Studio</title>
+    <script>
+      (function () {
+        var key = "floorplan-theme";
+        var theme = "dark";
+        try {
+          var saved = localStorage.getItem(key);
+          if (saved === "light" || saved === "dark") theme = saved;
+        } catch (_) {}
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
   </head>
   <body>
     <div class="app-shell">
@@ -15,6 +26,7 @@
       </div>
 
       <button id="sidebarToggleButton" class="sidebar-toggle" type="button">Workspace</button>
+      <button id="themeToggleButton" class="theme-toggle" type="button">Light mode</button>
       <div id="sidebarScrim" class="sidebar-scrim"></div>
 
       <aside id="controlPanel" class="control-panel">

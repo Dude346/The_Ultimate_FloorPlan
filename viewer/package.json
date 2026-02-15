@@ -7,6 +7,7 @@
     "dev": "vite",
     "dev:ply": "node ./run-with-ply.mjs",
     "dev:glb": "node ./run-with-glb.mjs",
+    "dev:fbx": "node ./run-with-fbx.mjs",
     "dev:world": "node ./run-world.mjs",
     "build": "vite build",
     "preview": "vite preview"

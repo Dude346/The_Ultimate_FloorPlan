@@ -46,6 +46,8 @@ def generate_shape_e_mesh_bytes(
 ) -> bytes:
     import os
     import tempfile
+    import time
+    from pathlib import Path
 
     import torch
     from shap_e.diffusion.gaussian_diffusion import diffusion_from_config
@@ -58,9 +60,75 @@ def generate_shape_e_mesh_bytes(
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    xm = load_model("transmitter", device=device)
-    text_model = load_model("text300M", device=device)
-    diffusion = diffusion_from_config(load_config("diffusion"))
+    def _is_transient_download_error(exc: Exception) -> bool:
+        msg = str(exc).lower()
+        tokens = (
+            "incompleteread",
+            "chunkedencodingerror",
+            "connection broken",
+            "protocolerror",
+            "connection reset",
+            "read timed out",
+            "temporarily unavailable",
+        )
+        return any(token in msg for token in tokens)
+
+    def _load_model_cached(name: str):
+        try:
+            return load_model(name, device=device, cache_dir=MODEL_CACHE_PATH)
+        except TypeError:
+            return load_model(name, device=device)
+
+    def _load_config_cached(name: str):
+        try:
+            return load_config(name, cache_dir=MODEL_CACHE_PATH)
+        except TypeError:
+            return load_config(name)
+
+    def _cleanup_partial_cache_files() -> None:
+        cache_root = Path(MODEL_CACHE_PATH)
+        if not cache_root.exists():
+            return
+        for path in cache_root.rglob("*"):
+            if not path.is_file():
+                continue
+            lower_name = path.name.lower()
+            if (
+                lower_name.endswith(".tmp")
+                or lower_name.endswith(".part")
+                or lower_name.endswith(".lock")
+                or "partial" in lower_name
+            ):
+                try:
+                    path.unlink()
+                except OSError:
+                    pass
+
+    last_error: Exception | None = None
+    xm = None
+    text_model = None
+    diffusion = None
+    max_attempts = 3
+    for attempt in range(1, max_attempts + 1):
+        try:
+            xm = _load_model_cached("transmitter")
+            text_model = _load_model_cached("text300M")
+            diffusion = diffusion_from_config(_load_config_cached("diffusion"))
+            model_cache_volume.commit()
+            break
+        except Exception as exc:
+            last_error = exc
+            if attempt >= max_attempts or not _is_transient_download_error(exc):
+                raise
+            print(
+                f"Model download/load failed on attempt {attempt}/{max_attempts}: {exc}. Retrying..."
+            )
+            _cleanup_partial_cache_files()
+            model_cache_volume.commit()
+            time.sleep(2 * attempt)
+
+    if xm is None or text_model is None or diffusion is None:
+        raise RuntimeError(f"Failed to load Shap-E models: {last_error}")
 
     latents = sample_latents(
         batch_size=1,

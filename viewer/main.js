@@ -32,8 +32,10 @@ const viewportSize = new THREE.Vector2();
 
 const controls = new PointerLockControls(camera, document.body);
 
-scene.add(new THREE.HemisphereLight(0xffffff, 0xe2e8f0, 0.95));
-scene.add(new THREE.AmbientLight(0xffffff, 0.45));
+const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0xe2e8f0, 0.95);
+scene.add(hemisphereLight);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.45);
+scene.add(ambientLight);
 const dirLight = new THREE.DirectionalLight(0xffffff, 0.75);
 dirLight.position.set(3, 5, 2);
 scene.add(dirLight);
@@ -120,6 +122,70 @@ const planeYZ = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.9), planeMaterialY
 planeYZ.position.set(0, 0.45, 0.45);
 planeYZ.rotation.y = Math.PI / 2;
 gizmoRoot.add(planeYZ);
+
+const VIEWER_THEMES = {
+  light: {
+    background: 0xffffff,
+    hemiSky: 0xffffff,
+    hemiGround: 0xe2e8f0,
+    hemiIntensity: 0.95,
+    ambientIntensity: 0.45,
+    dirColor: 0xffffff,
+    dirIntensity: 0.75,
+    gridMajor: 0xcbd5e1,
+    gridMinor: 0xe2e8f0,
+    gizmoBg: 0xffffff,
+    gizmoBorder: 0xcbd5e1,
+  },
+  dark: {
+    background: 0x06090f,
+    hemiSky: 0xcbd5e1,
+    hemiGround: 0x0f172a,
+    hemiIntensity: 0.75,
+    ambientIntensity: 0.34,
+    dirColor: 0xe2e8f0,
+    dirIntensity: 0.62,
+    gridMajor: 0x334155,
+    gridMinor: 0x1e293b,
+    gizmoBg: 0x0f172a,
+    gizmoBorder: 0x334155,
+  },
+};
+
+function currentThemeName() {
+  return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+}
+
+function applyViewerTheme(name) {
+  const theme = VIEWER_THEMES[name] ?? VIEWER_THEMES.light;
+
+  scene.background.setHex(theme.background);
+  renderer.setClearColor(theme.background, 1);
+
+  hemisphereLight.color.setHex(theme.hemiSky);
+  hemisphereLight.groundColor.setHex(theme.hemiGround);
+  hemisphereLight.intensity = theme.hemiIntensity;
+
+  ambientLight.intensity = theme.ambientIntensity;
+  dirLight.color.setHex(theme.dirColor);
+  dirLight.intensity = theme.dirIntensity;
+
+  const [majorMaterial, minorMaterial] = Array.isArray(grid.material) ? grid.material : [grid.material, null];
+  majorMaterial?.color?.setHex(theme.gridMajor);
+  minorMaterial?.color?.setHex(theme.gridMinor);
+
+  gizmoBg.material.color.setHex(theme.gizmoBg);
+  gizmoBorder.material.color.setHex(theme.gizmoBorder);
+}
+
+applyViewerTheme(currentThemeName());
+
+if (typeof MutationObserver !== "undefined") {
+  const themeObserver = new MutationObserver(() => {
+    applyViewerTheme(currentThemeName());
+  });
+  themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+}
 
 
 function createAxisLabel(text, fillColor) {

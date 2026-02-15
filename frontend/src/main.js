@@ -12,6 +12,7 @@ const busyOverlay = document.getElementById("busyOverlay");
 const busyText = document.getElementById("busyText");
 const controlPanel = document.getElementById("controlPanel");
 const sidebarToggleButton = document.getElementById("sidebarToggleButton");
+const themeToggleButton = document.getElementById("themeToggleButton");
 const sidebarScrim = document.getElementById("sidebarScrim");
 const sceneUploadInput = document.getElementById("sceneUploadInput");
 const savedScenesSelect = document.getElementById("savedScenesSelect");
@@ -22,6 +23,26 @@ const frontendStatus = document.getElementById("frontendStatus");
 let busyCount = 0;
 let pendingUploadedFile = null;
 const loadButtonDefaultText = loadSavedSceneButton?.textContent || "Load";
+const THEME_STORAGE_KEY = "floorplan-theme";
+
+function applyTheme(theme) {
+  const normalized = theme === "light" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", normalized);
+  if (themeToggleButton) {
+    themeToggleButton.textContent = normalized === "dark" ? "Light mode" : "Dark mode";
+  }
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+  const next = current === "dark" ? "light" : "dark";
+  applyTheme(next);
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, next);
+  } catch {
+    // Ignore storage failures.
+  }
+}
 
 function lockViewerPointer() {
   if (document.pointerLockElement) return;
@@ -244,6 +265,10 @@ sidebarToggleButton?.addEventListener("click", () => {
   setSidebarOpen(open);
 });
 
+themeToggleButton?.addEventListener("click", () => {
+  toggleTheme();
+});
+
 sidebarScrim?.addEventListener("click", () => {
   setSidebarOpen(false);
 });
@@ -261,6 +286,22 @@ window.addEventListener("keydown", (event) => {
   }
 });
 
-await refreshSavedSceneList();
-setSidebarOpen(false, { relockViewer: false });
-setFrontendStatus("Upload a room PLY to get started");
+async function init() {
+  await refreshSavedSceneList();
+  setSidebarOpen(false, { relockViewer: false });
+  setFrontendStatus("Upload a room PLY to get started");
+
+  let initialTheme = "dark";
+  try {
+    const saved = localStorage.getItem(THEME_STORAGE_KEY);
+    if (saved === "light" || saved === "dark") initialTheme = saved;
+  } catch {
+    // Ignore storage failures.
+  }
+  applyTheme(initialTheme);
+}
+
+init().catch((error) => {
+  console.error(error);
+  setFrontendStatus("Initialization failed. Check browser console.");
+});

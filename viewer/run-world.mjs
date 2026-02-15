@@ -6,7 +6,7 @@ import { spawn } from "node:child_process";
 function printUsage() {
   console.log([
     "Usage:",
-    "  npm run dev:world -- --file /path/to/world.(ply|glb)",
+    "  npm run dev:world -- --file /path/to/world.(ply|glb|fbx)",
     "",
     "Optional extra Vite args:",
     "  npm run dev:world -- --file /path/to/world.ply --host --port 5174",
@@ -111,8 +111,14 @@ async function main() {
     console.log(`Copied GLB:\n  from ${source}\n  to   ${target}`);
     console.log("Detected file type: glb-mesh");
     openPath = "/index_glb.html";
+  } else if (ext === ".fbx") {
+    const target = path.resolve(thisDir, "public", "model.fbx");
+    await copyFile(source, target);
+    console.log(`Copied FBX:\n  from ${source}\n  to   ${target}`);
+    console.log("Detected file type: fbx-mesh");
+    openPath = "/index_fbx.html";
   } else {
-    console.error(`Error: Unsupported extension "${ext}". Use .ply or .glb.`);
+    console.error(`Error: Unsupported extension "${ext}". Use .ply, .glb, or .fbx.`);
     process.exit(1);
   }
 
