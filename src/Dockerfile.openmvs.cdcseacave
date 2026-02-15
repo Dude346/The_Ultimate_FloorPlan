@@ -18,7 +18,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   apt-get autoclean && apt-get clean
 
 # Boost
-RUN apt-get -y install libboost-all-dev
+RUN apt-get -y install libboost-iostreams-dev libboost-program-options-dev libboost-system-dev libboost-serialization-dev
 
 # CGAL
 RUN apt-get -y install libcgal-dev libcgal-qt5-dev
@@ -28,7 +28,12 @@ RUN apt-get -y install freeglut3-dev libglew-dev libglfw3-dev
 
 # Install COLMAP dependencies
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
-  libboost-all-dev \
+  libboost-program-options-dev \
+  libboost-filesystem-dev \
+  libboost-graph-dev \
+  libboost-regex-dev \
+  libboost-system-dev \
+  libboost-test-dev \
   libeigen3-dev \
   libsuitesparse-dev \
   libfreeimage-dev \
