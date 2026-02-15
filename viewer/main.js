@@ -322,10 +322,9 @@ function applyScaleFromDialog() {
   if (!scaleInput) return;
 
   const raw = scaleInput.value.trim();
-  const parsed = Number(raw);
-  const factor = Number.isFinite(parsed) ? Math.trunc(parsed) : NaN;
-  if (!Number.isInteger(factor) || factor <= 0) {
-    setStatus("Scale must be a positive integer (1, 2, 3, ...).");
+  const factor = Number(raw);
+  if (!Number.isFinite(factor) || factor <= 0) {
+    setStatus("Scale must be a positive number (e.g. 0.5, 1, 2).");
     scaleInput.focus();
     scaleInput.select();
     return;

@@ -106,7 +106,8 @@ Viewer controls:
 - `F`: pick up asset at screen center
 - `G`: place held asset in free 3D space (in front of camera)
 - `+`: open scale dialog for held asset
-- Scale dialog: enter a positive integer multiplier (`2` = 2x), then `Enter`/`Apply`
+- Scaling now accepts decimals (for example, `0.5` scales to half size).
+- Scale dialog: enter a positive multiplier (`0.5` = half size, `2` = 2x), then `Enter`/`Apply`
 - Scale dialog: `Esc`/`Cancel` closes without changing scale
 - `Esc`: unlock cursor
 - Top-right gizmo: world `X/Y/Z` + plane orientation (`XY/XZ/YZ`)

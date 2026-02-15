@@ -227,7 +227,13 @@ def _place_asset(
     return out
 
 
-def _write_mesh_ply(path: Path, vertices: np.ndarray, faces: list[np.ndarray], colors: np.ndarray | None = None) -> None:
+def _write_mesh_ply(
+    path: Path,
+    vertices: np.ndarray,
+    faces: list[np.ndarray],
+    colors: np.ndarray | None = None,
+    comments: list[str] | None = None,
+) -> None:
     if colors is not None and colors.shape[0] != vertices.shape[0]:
         raise ValueError("colors row count must match vertices row count.")
 
@@ -254,6 +260,7 @@ def _write_mesh_ply(path: Path, vertices: np.ndarray, faces: list[np.ndarray], c
     PlyData(
         [PlyElement.describe(v_data, "vertex"), PlyElement.describe(f_data, "face")],
         text=False,
+        comments=comments or [],
     ).write(str(path))
 
 
@@ -320,7 +327,15 @@ def main() -> int:
         asset_c = np.full((asset_v.shape[0], 3), 220, dtype=np.uint8)
     merged_colors = np.vstack([scene_c, asset_c])
 
-    _write_mesh_ply(out_path, merged_vertices, merged_faces, merged_colors)
+    output_comments = [
+        "floorplan_merged_scene_asset true",
+        f"floorplan_scene_vertex_count {scene_v.shape[0]}",
+        f"floorplan_scene_face_count {len(scene_f)}",
+        f"floorplan_asset_vertex_count {asset_v.shape[0]}",
+        f"floorplan_asset_face_count {len(asset_f)}",
+        f"floorplan_asset_name {args.asset_mesh.stem}",
+    ]
+    _write_mesh_ply(out_path, merged_vertices, merged_faces, merged_colors, comments=output_comments)
 
     print(f"Scene vertices/faces: {scene_v.shape[0]:,} / {len(scene_f):,}")
     print(f"Asset vertices/faces: {asset_v.shape[0]:,} / {len(asset_f):,}")
