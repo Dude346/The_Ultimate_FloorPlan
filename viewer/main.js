@@ -52,6 +52,11 @@ const assetsGroup = new THREE.Group();
 assetsGroup.name = "assetsGroup";
 worldRoot.add(assetsGroup);
 
+// Scene-derived movable objects (e.g., separated mesh parts or standalone point clouds).
+const sceneObjectsGroup = new THREE.Group();
+sceneObjectsGroup.name = "sceneObjectsGroup";
+worldRoot.add(sceneObjectsGroup);
+
 // Top-right orientation widget (XYZ + coordinate planes).
 const gizmoScene = new THREE.Scene();
 const gizmoCamera = new THREE.PerspectiveCamera(40, 1, 0.01, 50);
@@ -167,6 +172,9 @@ const POINT_DENSITY_MULTIPLIER_RAW = 1.6;
 const POINT_DENSITY_MULTIPLIER_SPLAT = 1.35;
 const POINT_DENSITY_SCALE_MIN = 0.5;
 const POINT_DENSITY_SCALE_MAX = 2.5;
+const MAX_SPLIT_FACE_COUNT = 1_500_000;
+const MAX_SPLIT_COMPONENTS = 2000;
+const MIN_COMPONENT_FACES = 12;
 let pointDensityScale = 1.0;
 
 const keyState = new Map();
@@ -188,7 +196,7 @@ const tmpWorldTarget = new THREE.Vector3();
 const tmpLocalTarget = new THREE.Vector3();
 const tmpBoxCenter = new THREE.Vector3();
 const tmpDropForward = new THREE.Vector3();
-const MAX_PICK_DISTANCE = 8.0;
+const MAX_PICK_DISTANCE = 200.0;
 const DROP_DISTANCE = 0.3; // place slightly in front of the camera, in full 3D space
 
 let selected = null;
@@ -252,18 +260,32 @@ function addAssetToGroup(assetRoot, assetType = "asset") {
 // Expose helper for other modules that dynamically add assets.
 window.addAssetToGroup = addAssetToGroup;
 
+function addSceneObjectToGroup(objectRoot, objectType = "scene_object") {
+  if (!objectRoot) return null;
+  if (objectRoot.parent && objectRoot.parent !== sceneObjectsGroup) {
+    objectRoot.parent.remove(objectRoot);
+  }
+  sceneObjectsGroup.add(objectRoot);
+  objectRoot.userData.movable = true;
+  if (!objectRoot.userData.assetId) {
+    objectRoot.userData.assetId = nextAssetId(objectType);
+  }
+  return objectRoot;
+}
+
 function getAssetRootFromObject(hitObject) {
   let node = hitObject;
-  while (node && node.parent && node.parent !== assetsGroup) {
+  while (node && node.parent && node.parent !== assetsGroup && node.parent !== sceneObjectsGroup) {
     node = node.parent;
   }
-  if (!node || node.parent !== assetsGroup) return null;
+  if (!node || (node.parent !== assetsGroup && node.parent !== sceneObjectsGroup)) return null;
   return node.userData?.movable ? node : null;
 }
 
 function pickAssetFromViewCenter() {
   raycaster.setFromCamera(centerNDC, camera);
-  const hits = raycaster.intersectObjects(assetsGroup.children, true);
+  const roots = [...assetsGroup.children, ...sceneObjectsGroup.children];
+  const hits = raycaster.intersectObjects(roots, true);
   if (hits.length === 0) return null;
   if (hits[0].distance > MAX_PICK_DISTANCE) return null;
   return getAssetRootFromObject(hits[0].object);
@@ -422,7 +444,7 @@ function pickUpAssetInView() {
   const picked = pickAssetFromViewCenter();
   if (!picked) {
     clearSelection();
-    setStatus("No movable asset in range. Aim at an asset and press F.");
+    setStatus("No movable object in range. Move closer and aim at the target, then press F.");
     return;
   }
 
@@ -510,6 +532,12 @@ function disposeObject3D(root) {
 function disposeCurrentMesh() {
   endDrag();
   clearSelection();
+
+  while (sceneObjectsGroup.children.length > 0) {
+    const sceneObj = sceneObjectsGroup.children[0];
+    sceneObjectsGroup.remove(sceneObj);
+    disposeObject3D(sceneObj);
+  }
 
   while (assetsGroup.children.length > 0) {
     const asset = assetsGroup.children[0];
@@ -814,11 +842,14 @@ function prepareColorModes(geometry) {
   return { hasColor: true, cleanedCount: darkSpeckles + triSpeckles };
 }
 
-function buildMeshFromGeometry(geometry) {
+function buildMeshFromGeometry(geometry, { denoise = true } = {}) {
   recomputeAndSanitizeNormals(geometry);
   geometry.computeBoundingBox();
 
-  const { hasColor, cleanedCount } = prepareColorModes(geometry);
+  const prep = denoise
+    ? prepareColorModes(geometry)
+    : { hasColor: Boolean(geometry.getAttribute("color")), cleanedCount: 0 };
+  const { hasColor, cleanedCount } = prep;
   currentHasVertexColor = hasColor;
 
   const material = new THREE.MeshLambertMaterial({
@@ -831,6 +862,145 @@ function buildMeshFromGeometry(geometry) {
   mesh.castShadow = false;
   mesh.receiveShadow = false;
   return { object: mesh, denoisedCount: cleanedCount, denoiseLabel: "color outliers", renderMode: "mesh" };
+}
+
+function buildGeometryFromIndexSubset(sourceGeometry, subsetIndex) {
+  const sourcePosition = sourceGeometry.getAttribute("position");
+  if (!sourcePosition || subsetIndex.length < 3) return null;
+
+  const remap = new Map();
+  const oldByNew = [];
+  const remapped = new Uint32Array(subsetIndex.length);
+  let nextVertex = 0;
+
+  for (let i = 0; i < subsetIndex.length; i += 1) {
+    const oldIndex = subsetIndex[i];
+    let newIndex = remap.get(oldIndex);
+    if (newIndex === undefined) {
+      newIndex = nextVertex;
+      remap.set(oldIndex, newIndex);
+      oldByNew.push(oldIndex);
+      nextVertex += 1;
+    }
+    remapped[i] = newIndex;
+  }
+
+  const outGeometry = new THREE.BufferGeometry();
+  for (const [name, attr] of Object.entries(sourceGeometry.attributes)) {
+    const src = attr.array;
+    const itemSize = attr.itemSize;
+    const Ctor = src.constructor;
+    const out = new Ctor(nextVertex * itemSize);
+
+    for (let newIdx = 0; newIdx < nextVertex; newIdx += 1) {
+      const oldIdx = oldByNew[newIdx];
+      const srcOffset = oldIdx * itemSize;
+      const dstOffset = newIdx * itemSize;
+      for (let c = 0; c < itemSize; c += 1) {
+        out[dstOffset + c] = src[srcOffset + c];
+      }
+    }
+    outGeometry.setAttribute(name, new THREE.BufferAttribute(out, itemSize, attr.normalized));
+  }
+
+  const IndexCtor = nextVertex <= 65535 ? Uint16Array : Uint32Array;
+  outGeometry.setIndex(new THREE.BufferAttribute(new IndexCtor(remapped), 1));
+  outGeometry.computeBoundingBox();
+  outGeometry.computeBoundingSphere();
+  return outGeometry;
+}
+
+function splitMeshIntoLooseParts(geometry) {
+  if (!geometry?.index) return null;
+  const position = geometry.getAttribute("position");
+  if (!position) return null;
+
+  const index = geometry.index.array;
+  const faceCount = Math.floor(index.length / 3);
+  if (faceCount < 2 || faceCount > MAX_SPLIT_FACE_COUNT) return null;
+
+  const vertexCount = position.count;
+  const parent = new Int32Array(vertexCount);
+  const rank = new Uint8Array(vertexCount);
+  for (let i = 0; i < vertexCount; i += 1) parent[i] = i;
+
+  const find = (x) => {
+    let p = x;
+    while (parent[p] !== p) {
+      parent[p] = parent[parent[p]];
+      p = parent[p];
+    }
+    return p;
+  };
+  const union = (a, b) => {
+    let ra = find(a);
+    let rb = find(b);
+    if (ra === rb) return;
+    const rka = rank[ra];
+    const rkb = rank[rb];
+    if (rka < rkb) {
+      parent[ra] = rb;
+    } else if (rka > rkb) {
+      parent[rb] = ra;
+    } else {
+      parent[rb] = ra;
+      rank[ra] += 1;
+    }
+  };
+
+  for (let i = 0; i + 2 < index.length; i += 3) {
+    const a = index[i];
+    const b = index[i + 1];
+    const c = index[i + 2];
+    union(a, b);
+    union(b, c);
+  }
+
+  const rootToComp = new Map();
+  const compFaceCounts = [];
+  for (let i = 0; i + 2 < index.length; i += 3) {
+    const root = find(index[i]);
+    let comp = rootToComp.get(root);
+    if (comp === undefined) {
+      comp = compFaceCounts.length;
+      rootToComp.set(root, comp);
+      compFaceCounts.push(0);
+    }
+    compFaceCounts[comp] += 1;
+  }
+
+  const componentCount = compFaceCounts.length;
+  if (componentCount <= 1) return null;
+  if (componentCount > MAX_SPLIT_COMPONENTS) return null;
+
+  const largestFaceCount = compFaceCounts.reduce((m, n) => Math.max(m, n), 0);
+  if (largestFaceCount / faceCount > 0.995) return null;
+
+  const compIndices = compFaceCounts.map((count) => new Uint32Array(count * 3));
+  const writeOffsets = new Uint32Array(componentCount);
+
+  for (let i = 0; i + 2 < index.length; i += 3) {
+    const comp = rootToComp.get(find(index[i]));
+    const out = compIndices[comp];
+    const off = writeOffsets[comp];
+    out[off] = index[i];
+    out[off + 1] = index[i + 1];
+    out[off + 2] = index[i + 2];
+    writeOffsets[comp] = off + 3;
+  }
+
+  const order = [...Array(componentCount).keys()].sort((a, b) => compFaceCounts[b] - compFaceCounts[a]);
+  const parts = [];
+  for (const comp of order) {
+    const compFaces = compFaceCounts[comp];
+    if (compFaces < MIN_COMPONENT_FACES) continue;
+    const partGeometry = buildGeometryFromIndexSubset(geometry, compIndices[comp]);
+    if (!partGeometry) continue;
+    parts.push({ geometry: partGeometry, faceCount: compFaces });
+  }
+
+  if (parts.length <= 1) return null;
+  return { parts, faceCount, componentCount: parts.length };
 }
 
 function buildPointCloudFromGeometry(geometry, { isSplatLike }) {
@@ -969,18 +1139,49 @@ function loadGeometryFromArrayBuffer(arrayBuffer, label) {
     }
   }
 
+  // If this is a mesh with loose/disconnected parts, split each part into its own
+  // movable root so F/G interaction works on existing scene objects too.
+  if (shouldRenderAsMesh && !mergedMeta) {
+    const looseParts = splitMeshIntoLooseParts(geometry);
+    if (looseParts) {
+      let denoisedCount = 0;
+      for (const part of looseParts.parts) {
+        const builtPart = buildMeshFromGeometry(part.geometry, { denoise: false });
+        denoisedCount += builtPart.denoisedCount;
+        addSceneObjectToGroup(builtPart.object, "scene_part");
+      }
+      currentMesh = null;
+      sceneMesh = null;
+      applySceneRotation();
+      fitCameraToMesh(worldRoot);
+      setStatus(
+        `Loaded ${label} (${count.toLocaleString()} vertices, mode=separated-mesh, parts=${looseParts.componentCount.toLocaleString()}, faces=${faceCount.toLocaleString()}, rotX=${rotDeg}deg)`,
+      );
+      return;
+    }
+  }
+
   const { object, denoisedCount, denoiseLabel, renderMode } = shouldRenderAsMesh
     ? buildMeshFromGeometry(geometry)
     : buildPointCloudFromGeometry(geometry, { isSplatLike });
 
   currentMesh = object;
-  sceneMesh = object;
-  worldRoot.add(object);
+  // Standalone point-cloud scenes should be movable too.
+  if (!shouldRenderAsMesh) {
+    sceneMesh = null;
+    addSceneObjectToGroup(object, isSplatLike ? "scene_gaussian" : "scene_points");
+  } else {
+    // Fallback: if mesh could not be split, still allow interacting with it as one movable object.
+    sceneMesh = null;
+    addSceneObjectToGroup(object, "scene_mesh");
+  }
   applySceneRotation();
   fitCameraToMesh(worldRoot);
   applyPointDensityScale();
 
-  const mode = shouldRenderAsMesh && currentHasVertexColor ? (preferCleanView ? "clean-color" : "raw-color") : renderMode;
+  const mode = shouldRenderAsMesh
+    ? (currentHasVertexColor ? (preferCleanView ? "clean-color-movable" : "raw-color-movable") : "mesh-movable")
+    : renderMode;
   const denoiseSuffix = denoisedCount > 0 ? `, cleaned ${denoisedCount.toLocaleString()} ${denoiseLabel}` : "";
   setStatus(`Loaded ${label} (${count.toLocaleString()} vertices, mode=${mode}, faces=${faceCount.toLocaleString()}, rotX=${rotDeg}deg${denoiseSuffix})`);
 }
