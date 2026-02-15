@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GLB Mesh Viewer</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div id="overlay" class="overlay">
+      <button id="enterButton" class="enter-button">Click to enter</button>
+      <p class="overlay-hint">WASD move · E up · C down · Shift sprint · Esc unlock</p>
+    </div>
+
+    <header class="topbar">
+      <div class="title">GLB Mesh Viewer</div>
+      <div class="actions">
+        <label class="file-btn" for="fileInput">Open GLB</label>
+        <input id="fileInput" type="file" accept=".glb" />
+      </div>
+    </header>
+
+    <div id="status" class="status">Loading /model.glb ...</div>
+
+    <section class="help">
+      <div>Click: pointer lock</div>
+      <div>W/A/S/D: move</div>
+      <div>E: rise</div>
+      <div>C: descend</div>
+      <div>Shift: sprint</div>
+      <div>Open/drag-drop .glb supported</div>
+    </section>
+
+    <script type="module" src="/main_glb.js"></script>
+  </body>
+</html>
