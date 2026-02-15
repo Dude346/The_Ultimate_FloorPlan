@@ -1,0 +1,43 @@
+{
+  "prompt": "Move the blue trash bin closer to the door",
+  "resolved_labels": {
+    "target": "trash bin",
+    "anchor": "door"
+  },
+  "moved_labels": [
+    "trash bin"
+  ],
+  "initial_translations": {
+    "trash bin": [
+      0.9362879991531372,
+      0.05613876134157181,
+      0.0
+    ]
+  },
+  "final_translations": {
+    "trash bin": [
+      0.9362879991531372,
+      0.05613876134157181,
+      0.0
+    ]
+  },
+  "clashes_after": {
+    "trash bin": []
+  },
+  "room_bounds": [
+    -1.4933733940124512,
+    -1.815980315208435,
+    -0.06388774514198303,
+    1.7578766345977783,
+    1.7855197191238403,
+    2.9203624725341797
+  ],
+  "moved_points": 7794,
+  "output_ply": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/fancybathroom.auto.object_edit.blue_bin_near_door.ply",
+  "output_labels": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_object_edit_fancy/edited_labels.json",
+  "hole_fill": {
+    "enabled": true,
+    "margin": 0.2,
+    "ratio": 0.35
+  }
+}

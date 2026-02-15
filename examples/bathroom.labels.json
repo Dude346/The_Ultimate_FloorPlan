@@ -1,0 +1,26 @@
+{
+  "labels": {
+    "door": {
+      "bbox": [
+        1.2,
+        -0.5,
+        -0.1,
+        2.3,
+        0.6,
+        2.2
+      ],
+      "source": "manual_or_sam"
+    },
+    "toilet": {
+      "bbox": [
+        -0.5,
+        -0.5,
+        -0.1,
+        0.5,
+        0.5,
+        1.5
+      ],
+      "source": "manual_or_sam"
+    }
+  }
+}

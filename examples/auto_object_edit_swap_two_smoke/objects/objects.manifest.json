@@ -1,0 +1,29 @@
+{
+  "input_ply": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/Scaniverse bathroom.ply",
+  "labels_path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_object_edit_swap_two_smoke/auto_labels.json",
+  "expand": 0.02,
+  "component_voxel": 0.06,
+  "min_points": 30,
+  "objects": [
+    {
+      "label": "door",
+      "point_count": 17403,
+      "bbox": [
+        -2.073517322540283,
+        -0.2937617301940918,
+        1.0946909189224243,
+        -1.553204894065857,
+        0.4459257125854492,
+        1.9862534999847412
+      ],
+      "center": [
+        -1.81336110830307,
+        0.07608199119567871,
+        1.5404722094535828
+      ],
+      "points_path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_object_edit_swap_two_smoke/objects/door.points.ply",
+      "proxy_mesh_path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_object_edit_swap_two_smoke/objects/door.proxy_mesh.ply"
+    }
+  ],
+  "skipped": []
+}

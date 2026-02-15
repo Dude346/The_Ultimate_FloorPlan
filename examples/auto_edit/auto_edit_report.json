@@ -1,0 +1,80 @@
+{
+  "prompt": "move the toilet near the door",
+  "entities": [
+    "toilet",
+    "door"
+  ],
+  "output_ply": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/bathroom.auto.toilet_near_door.ply",
+  "labels_path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_edit/auto_labels.json",
+  "sam": {
+    "sampled_frames": 34,
+    "label_hits": {
+      "toilet": 5,
+      "door": 21
+    },
+    "issues": [],
+    "label_bboxes": {
+      "door": [
+        -2.318204879760742,
+        -0.7630742788314819,
+        1.0369410514831543,
+        -1.9394547939300537,
+        0.11405086517333984,
+        2.5365657806396484
+      ],
+      "toilet": [
+        -1.8878923654556274,
+        -0.8590743541717529,
+        0.40656596422195435,
+        1.0967326164245605,
+        0.6709258556365967,
+        1.2315659523010254
+      ]
+    }
+  },
+  "precheck": {
+    "target": "toilet",
+    "prompt": "move the toilet near the door",
+    "translation": [
+      -1.3478598380088807,
+      -0.3932894170284271,
+      0.0
+    ],
+    "moved_bbox": [
+      [
+        -3.235752203464508,
+        -1.25236377120018,
+        0.40656596422195435
+      ],
+      [
+        -0.2511272215843201,
+        0.27763643860816956,
+        1.2315659523010254
+      ]
+    ],
+    "in_bounds": false,
+    "clashes": [
+      "door"
+    ],
+    "orientation_ok": true,
+    "support_ok": true
+  },
+  "moved_points": 37898,
+  "translation": [
+    0.39762510061264056,
+    -0.23043745756149292,
+    0.0
+  ],
+  "placement_strategy": "auto_near_search",
+  "postcheck": {
+    "in_bounds": true,
+    "clashes": [],
+    "support_ok": true,
+    "orientation_ok": true
+  },
+  "hole_fill": {
+    "enabled": true,
+    "margin": 0.2,
+    "ratio": 0.35
+  }
+}

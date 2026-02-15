@@ -1,0 +1,135 @@
+{
+  "prompt": "Move the blue trash bin closer to the door",
+  "detection_labels": [
+    "trash bin",
+    "door"
+  ],
+  "output_ply": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/fancybathroom.auto.object_edit.blue_bin_near_door.ply",
+  "labels_path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_object_edit_fancy/auto_labels.json",
+  "output_labels": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_object_edit_fancy/edited_labels.json",
+  "objects_manifest": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_object_edit_fancy/objects/objects.manifest.json",
+  "sam": {
+    "sampled_frames": 12,
+    "label_hits": {
+      "trash bin": 3,
+      "door": 7
+    },
+    "best_detections": {
+      "trash bin": {
+        "frame_index": 1,
+        "score": 0.19505341351032257,
+        "box_xyxy": [
+          691.4342041015625,
+          1247.55712890625,
+          873.5989990234375,
+          1434.9818115234375
+        ]
+      },
+      "door": {
+        "frame_index": 6,
+        "score": 0.8134174942970276,
+        "box_xyxy": [
+          389.11871337890625,
+          -8.490257263183594,
+          1044.509521484375,
+          1628.4730224609375
+        ]
+      }
+    },
+    "issues": [],
+    "label_bboxes": {
+      "trash bin": [
+        -1.0230484008789062,
+        -0.3879803419113159,
+        0.813687264919281,
+        -0.597123384475708,
+        0.05601966381072998,
+        1.5763622522354126
+      ],
+      "door": [
+        1.182626724243164,
+        -0.6519800424575806,
+        0.1843622624874115,
+        1.2036266326904297,
+        0.560019850730896,
+        1.1923621892929077
+      ]
+    }
+  },
+  "object_assets": [
+    {
+      "label": "door",
+      "point_count": 9845,
+      "bbox": [
+        1.1631267070770264,
+        -0.6714800596237183,
+        0.1648622453212738,
+        1.219376564025879,
+        0.5795197486877441,
+        1.204362154006958
+      ],
+      "center": [
+        1.1912516355514526,
+        -0.04598015546798706,
+        0.6846121996641159
+      ],
+      "points_path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_object_edit_fancy/objects/door.points.ply",
+      "proxy_mesh_path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_object_edit_fancy/objects/door.proxy_mesh.ply"
+    },
+    {
+      "label": "trash bin",
+      "point_count": 7794,
+      "bbox": [
+        -1.0426234006881714,
+        -0.4074803590774536,
+        0.7941122651100159,
+        -0.5776234269142151,
+        0.07551968097686768,
+        1.5951122045516968
+      ],
+      "center": [
+        -0.8101234138011932,
+        -0.16598033905029297,
+        1.1946122348308563
+      ],
+      "points_path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_object_edit_fancy/objects/trash_bin.points.ply",
+      "proxy_mesh_path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_object_edit_fancy/objects/trash_bin.proxy_mesh.ply"
+    }
+  ],
+  "object_assets_skipped": [],
+  "edit": {
+    "output_ply": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/fancybathroom.auto.object_edit.blue_bin_near_door.ply",
+    "output_labels": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_object_edit_fancy/edited_labels.json",
+    "report_path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_object_edit_fancy/object_edit_report.json",
+    "moved_points": 7794,
+    "moved_labels": [
+      "trash bin"
+    ],
+    "translations": {
+      "trash bin": [
+        0.9362879991531372,
+        0.05613876134157181,
+        0.0
+      ]
+    },
+    "clashes_after": {
+      "trash bin": []
+    }
+  },
+  "config": {
+    "sample_fps": 0.5,
+    "max_frames": 12,
+    "box_threshold": 0.45,
+    "text_threshold": 0.35,
+    "signature_frames": 1,
+    "object_expand": 0.02,
+    "object_component_voxel": 0.06,
+    "object_min_points": 120,
+    "overlap_threshold": 0.08,
+    "overlap_push_step": 0.06,
+    "overlap_max_iters": 40,
+    "hole_fill": true,
+    "hole_fill_margin": 0.2,
+    "hole_fill_ratio": 0.35
+  }
+}

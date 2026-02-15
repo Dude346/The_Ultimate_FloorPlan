@@ -1,0 +1,64 @@
+{
+  "sampled_frames": 12,
+  "label_hits": {
+    "table": 12,
+    "coffee table": 11,
+    "couch": 9,
+    "sofa": 0,
+    "loveseat": 4
+  },
+  "avg_scores": {
+    "table": 0.46965156743923825,
+    "coffee table": 0.29458868639035657,
+    "couch": 0.24001829326152802,
+    "sofa": 0.0,
+    "loveseat": 0.20652979239821434
+  },
+  "bboxes": {
+    "table": [
+      -1.733986496925354,
+      -3.1794114112854004,
+      0.5796955227851868,
+      1.7113258838653564,
+      3.0755882263183594,
+      3.4090704917907715
+    ],
+    "coffee table": [
+      -1.7377365827560425,
+      -3.181286334991455,
+      0.08469551801681519,
+      1.7010133266448975,
+      3.0755882263183594,
+      3.4043829441070557
+    ],
+    "couch": [
+      -1.5989866256713867,
+      -3.0931615829467773,
+      0.024695515632629395,
+      1.6410133838653564,
+      2.7005882263183594,
+      3.373445510864258
+    ],
+    "loveseat": [
+      -1.5689865350723267,
+      -3.165349006652832,
+      -0.005304478108882904,
+      1.5660133361816406,
+      0.32027578353881836,
+      2.5296952724456787
+    ]
+  },
+  "issues": [
+    "table: bbox too large (ratio=0.605)",
+    "coffee table: bbox too large (ratio=0.708)",
+    "couch: bbox too large (ratio=0.623)",
+    "sofa: not detected",
+    "loveseat: bbox too large (ratio=0.275)",
+    "table<->coffee table: heavy overlap (0.995)",
+    "table<->couch: heavy overlap (0.860)",
+    "table<->loveseat: heavy overlap (0.769)",
+    "coffee table<->couch: heavy overlap (0.982)",
+    "coffee table<->loveseat: heavy overlap (0.964)",
+    "couch<->loveseat: heavy overlap (0.968)"
+  ]
+}

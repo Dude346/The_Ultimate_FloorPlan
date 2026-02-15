@@ -1,0 +1,55 @@
+{
+  "prompt": "swap the toilet and door",
+  "resolved_labels": {
+    "a": "toilet",
+    "b": "door"
+  },
+  "moved_labels": [
+    "toilet",
+    "door"
+  ],
+  "initial_translations": {
+    "toilet": [
+      -0.7504686117172241,
+      -0.5573437809944153,
+      1.1100000068545341
+    ],
+    "door": [
+      0.7504686117172241,
+      0.5573437809944153,
+      -1.1100000068545341
+    ]
+  },
+  "final_translations": {
+    "toilet": [
+      -0.7504686117172241,
+      -0.5573437809944153,
+      1.1100000068545341
+    ],
+    "door": [
+      0.7504686117172241,
+      0.5573437809944153,
+      -1.1100000068545341
+    ]
+  },
+  "clashes_after": {
+    "toilet": [],
+    "door": []
+  },
+  "room_bounds": [
+    -2.7232048511505127,
+    -2.7321994304656982,
+    -0.09874651581048965,
+    2.4771077632904053,
+    2.8899881839752197,
+    3.1243784427642822
+  ],
+  "moved_points": 35797,
+  "output_ply": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/bathroom.auto.object_edit.swap_smoke.ply",
+  "output_labels": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_object_edit_swap_smoke/edited_labels.json",
+  "hole_fill": {
+    "enabled": true,
+    "margin": 0.2,
+    "ratio": 0.35
+  }
+}

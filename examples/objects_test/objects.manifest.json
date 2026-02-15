@@ -1,0 +1,45 @@
+{
+  "input_ply": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/Scaniverse bathroom.ply",
+  "labels_path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/bathroom.sam.labels.json",
+  "objects": [
+    {
+      "label": "door",
+      "path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/objects_test/door.ply",
+      "point_count": 125909,
+      "bbox": [
+        -2.2075798511505127,
+        -0.8918867111206055,
+        0.9568784236907959,
+        0.38179492950439453,
+        0.6634259223937988,
+        3.06156587600708
+      ],
+      "center": [
+        -0.9128924608230591,
+        -0.11423039436340332,
+        2.009222149848938
+      ]
+    },
+    {
+      "label": "toilet",
+      "path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/objects_test/toilet.ply",
+      "point_count": 147707,
+      "bbox": [
+        -2.1363298892974854,
+        -1.0737617015838623,
+        0.5846909284591675,
+        0.6649200916290283,
+        0.674675703048706,
+        3.0315659046173096
+      ],
+      "center": [
+        -0.7357048988342285,
+        -0.19954299926757812,
+        1.8081284165382385
+      ]
+    }
+  ],
+  "skipped": [],
+  "expand": 0.02,
+  "min_points": 50
+}

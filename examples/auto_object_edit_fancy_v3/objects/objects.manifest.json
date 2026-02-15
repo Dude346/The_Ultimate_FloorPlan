@@ -1,0 +1,48 @@
+{
+  "input_ply": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/Scaniverse fancyBathroom.ply",
+  "labels_path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_object_edit_fancy_v3/auto_labels.json",
+  "expand": 0.02,
+  "component_voxel": 0.06,
+  "min_points": 120,
+  "objects": [
+    {
+      "label": "door",
+      "point_count": 9845,
+      "bbox": [
+        1.1631267070770264,
+        -0.6714800596237183,
+        0.1648622453212738,
+        1.219376564025879,
+        0.5795197486877441,
+        1.204362154006958
+      ],
+      "center": [
+        1.1912516355514526,
+        -0.04598015546798706,
+        0.6846121996641159
+      ],
+      "points_path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_object_edit_fancy_v3/objects/door.points.ply",
+      "proxy_mesh_path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_object_edit_fancy_v3/objects/door.proxy_mesh.ply"
+    },
+    {
+      "label": "trash bin",
+      "point_count": 7794,
+      "bbox": [
+        -1.0426234006881714,
+        -0.4074803590774536,
+        0.7941122651100159,
+        -0.5776234269142151,
+        0.07551968097686768,
+        1.5951122045516968
+      ],
+      "center": [
+        -0.8101234138011932,
+        -0.16598033905029297,
+        1.1946122348308563
+      ],
+      "points_path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_object_edit_fancy_v3/objects/trash_bin.points.ply",
+      "proxy_mesh_path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_object_edit_fancy_v3/objects/trash_bin.proxy_mesh.ply"
+    }
+  ],
+  "skipped": []
+}

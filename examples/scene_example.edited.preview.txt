@@ -1,0 +1,8 @@
+Room bounds:
+- min=(-3.00, -3.00, 0.00)
+- max=(3.00, 3.00, 2.80)
+
+Objects:
+- chair_1 [chair] pos=(0.00, 2.28, 0.00) rot=(0.0, 0.0, 0.0) asset=assets/chair_1.ply
+- painting_1 [painting] pos=(-1.80, 1.90, 1.40) rot=(0.0, 0.0, 0.0) asset=assets/painting_1.ply
+- painting_2 [painting] pos=(1.80, 1.90, 1.40) rot=(0.0, 0.0, 0.0) asset=assets/painting_2.ply

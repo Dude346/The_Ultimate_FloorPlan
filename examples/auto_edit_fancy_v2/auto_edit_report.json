@@ -1,0 +1,80 @@
+{
+  "prompt": "Move the blue trash bin closer to the door",
+  "entities": [
+    "blue trash bin",
+    "door"
+  ],
+  "output_ply": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/fancybathroom.auto.blue_trash_near_door.v2.ply",
+  "labels_path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_edit_fancy_v2/auto_labels.json",
+  "sam": {
+    "sampled_frames": 24,
+    "label_hits": {
+      "trash bin": 3,
+      "door": 7
+    },
+    "issues": [],
+    "label_bboxes": {
+      "trash bin": [
+        -0.8848234415054321,
+        -1.5519801378250122,
+        0.050862252712249756,
+        0.8586263656616211,
+        1.064019799232483,
+        0.8590622544288635
+      ],
+      "door": [
+        -1.0350109338760376,
+        -0.7179802656173706,
+        0.8683622479438782,
+        1.2156264781951904,
+        1.557519793510437,
+        1.7323622703552246
+      ]
+    }
+  },
+  "precheck": {
+    "target": "blue trash bin",
+    "prompt": "Move the blue trash bin closer to the door",
+    "translation": [
+      0.35571017950773237,
+      0.7863206267356873,
+      0.0
+    ],
+    "moved_bbox": [
+      [
+        -0.5291132619976997,
+        -0.765659511089325,
+        0.050862252712249756
+      ],
+      [
+        1.2143365451693535,
+        1.8503404259681702,
+        0.8590622544288635
+      ]
+    ],
+    "in_bounds": false,
+    "clashes": [
+      "trash bin"
+    ],
+    "orientation_ok": true,
+    "support_ok": true
+  },
+  "moved_points": 40392,
+  "translation": [
+    2.7491563081741335,
+    0.6637499332427979,
+    0.0
+  ],
+  "placement_strategy": "auto_near_search",
+  "postcheck": {
+    "in_bounds": false,
+    "clashes": [],
+    "support_ok": true,
+    "orientation_ok": true
+  },
+  "hole_fill": {
+    "enabled": true,
+    "margin": 0.2,
+    "ratio": 0.35
+  }
+}

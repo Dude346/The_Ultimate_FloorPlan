@@ -1,0 +1,126 @@
+{
+  "prompt": "move table near couch",
+  "entities": [
+    "table",
+    "couch"
+  ],
+  "output_ply": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/lounge.auto.guitar_near_door.debug.ply",
+  "labels_path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_edit_lounge_guitar_debug/auto_labels.json",
+  "sam": {
+    "sampled_frames": 12,
+    "label_hits": {
+      "table": 12,
+      "coffee table": 12,
+      "couch": 12,
+      "sofa": 12,
+      "loveseat": 12
+    },
+    "issues": [
+      "table: bbox too large (ratio=0.282)",
+      "coffee table: bbox too large (ratio=0.266)",
+      "couch: bbox too large (ratio=0.458)",
+      "sofa: bbox too large (ratio=0.458)",
+      "loveseat: bbox too large (ratio=0.458)",
+      "table<->coffee table: heavy overlap (0.961)",
+      "table<->couch: heavy overlap (0.651)",
+      "table<->sofa: heavy overlap (0.651)",
+      "table<->loveseat: heavy overlap (0.651)",
+      "coffee table<->couch: heavy overlap (0.718)",
+      "coffee table<->sofa: heavy overlap (0.718)",
+      "coffee table<->loveseat: heavy overlap (0.718)",
+      "couch<->sofa: heavy overlap (1.000)",
+      "couch<->loveseat: heavy overlap (1.000)",
+      "sofa<->loveseat: heavy overlap (1.000)"
+    ],
+    "label_bboxes": {
+      "table": [
+        -1.4480490684509277,
+        -3.0903491973876953,
+        0.010633021593093872,
+        1.6119508743286133,
+        2.3434009552001953,
+        1.7196954488754272
+      ],
+      "coffee table": [
+        -1.4339865446090698,
+        -3.1353487968444824,
+        0.009695515036582947,
+        1.6260132789611816,
+        1.8690258264541626,
+        1.764695405960083
+      ],
+      "couch": [
+        -1.6664865016937256,
+        -3.2337865829467773,
+        0.3096955120563507,
+        1.720700979232788,
+        1.2005884647369385,
+        3.381882905960083
+      ],
+      "sofa": [
+        -1.6664865016937256,
+        -3.2337865829467773,
+        0.3096955120563507,
+        1.720700979232788,
+        1.2005884647369385,
+        3.381882905960083
+      ],
+      "loveseat": [
+        -1.6664865016937256,
+        -3.2337865829467773,
+        0.3096955120563507,
+        1.720700979232788,
+        1.2005884647369385,
+        3.381882905960083
+      ]
+    }
+  },
+  "precheck": {
+    "target": "table",
+    "prompt": "move table near couch",
+    "translation": [
+      0.5780671989917755,
+      -0.961023211479187,
+      0.0
+    ],
+    "moved_bbox": [
+      [
+        -0.8699818694591522,
+        -4.051372408866882,
+        0.010633021593093872
+      ],
+      [
+        2.1900180733203887,
+        1.3823777437210083,
+        1.7196954488754272
+      ]
+    ],
+    "in_bounds": false,
+    "clashes": [
+      "coffee table",
+      "couch",
+      "loveseat",
+      "sofa"
+    ],
+    "orientation_ok": true,
+    "support_ok": true
+  },
+  "moved_points": 182547,
+  "translation": [
+    5.079218935966492,
+    -0.6431249380111694,
+    0.0
+  ],
+  "placement_strategy": "auto_near_search",
+  "postcheck": {
+    "in_bounds": false,
+    "clashes": [],
+    "support_ok": true,
+    "orientation_ok": true
+  },
+  "hole_fill": {
+    "enabled": true,
+    "margin": 0.2,
+    "ratio": 0.35
+  }
+}

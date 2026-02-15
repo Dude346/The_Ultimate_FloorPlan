@@ -1,0 +1,120 @@
+{
+  "prompt": "Move the table closer to couch",
+  "entities": [
+    "table",
+    "couch"
+  ],
+  "output_ply": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/lounge.auto.table_closer_to_couch.quick6.ply",
+  "labels_path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_edit_lounge_quick6/auto_labels.json",
+  "sam": {
+    "sampled_frames": 6,
+    "label_hits": {
+      "table": 2,
+      "coffee table": 0,
+      "dining table": 1,
+      "desk": 2,
+      "couch": 0,
+      "sofa": 0,
+      "loveseat": 0,
+      "sectional": 1
+    },
+    "issues": [
+      "table: bbox too large (ratio=0.654)",
+      "coffee table: not detected",
+      "dining table: low frame support (1 hits)",
+      "desk: bbox too large (ratio=0.552)",
+      "couch: not detected",
+      "sofa: not detected",
+      "loveseat: not detected",
+      "sectional: low frame support (1 hits)",
+      "table<->dining table: heavy overlap (0.986)",
+      "table<->desk: heavy overlap (0.971)",
+      "table<->sectional: heavy overlap (0.997)",
+      "dining table<->desk: heavy overlap (0.991)",
+      "dining table<->sectional: heavy overlap (0.704)",
+      "desk<->sectional: heavy overlap (0.992)"
+    ],
+    "label_bboxes": {
+      "table": [
+        -1.6477365493774414,
+        -3.1700363159179688,
+        0.0012580156326293945,
+        1.6560132503509521,
+        2.7605881690979004,
+        3.368757963180542
+      ],
+      "dining table": [
+        -1.3824241161346436,
+        -3.2028489112854004,
+        0.035008013248443604,
+        1.5819509029388428,
+        -0.8103489875793457,
+        2.6046953201293945
+      ],
+      "desk": [
+        -1.6317989826202393,
+        -3.2028489112854004,
+        0.05938301980495453,
+        1.7225759029388428,
+        1.8005883693695068,
+        3.377195358276367
+      ],
+      "sectional": [
+        -1.4639865159988403,
+        -3.1794114112854004,
+        0.04625801742076874,
+        1.5557007789611816,
+        0.09715080261230469,
+        1.7196954488754272
+      ]
+    }
+  },
+  "precheck": {
+    "target": "table",
+    "prompt": "Move the table closer to couch",
+    "translation": [
+      0.5498607015609741,
+      -0.7396329641342163,
+      0.0
+    ],
+    "moved_bbox": [
+      [
+        -1.0978758478164674,
+        -3.909669280052185,
+        0.0012580156326293945
+      ],
+      [
+        2.205873951911926,
+        2.020955204963684,
+        3.368757963180542
+      ]
+    ],
+    "in_bounds": false,
+    "clashes": [
+      "couch",
+      "desk",
+      "dining table",
+      "sectional"
+    ],
+    "orientation_ok": true,
+    "support_ok": true
+  },
+  "moved_points": 300201,
+  "translation": [
+    4.845312130451203,
+    -1.3364062309265137,
+    0.0
+  ],
+  "placement_strategy": "auto_near_search",
+  "postcheck": {
+    "in_bounds": false,
+    "clashes": [],
+    "support_ok": true,
+    "orientation_ok": true
+  },
+  "hole_fill": {
+    "enabled": true,
+    "margin": 0.2,
+    "ratio": 0.35
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "prompt": "move guitar near door",
+  "entities": [
+    "guitar",
+    "door"
+  ],
+  "output_ply": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/lounge.auto.guitar_near_door.debug.ply",
+  "labels_path": "/Users/phillipocampo/Desktop/TreeHacks_2026/The_Ultimate_FloorPlan/examples/auto_edit_lounge_guitar_debug/auto_labels.json",
+  "sam": {
+    "sampled_frames": 12,
+    "label_hits": {
+      "guitar": 5,
+      "door": 12
+    },
+    "issues": [
+      "guitar<->door: heavy overlap (0.576)"
+    ],
+    "label_bboxes": {
+      "guitar": [
+        -1.3796114921569824,
+        -3.1934738159179688,
+        0.00782051682472229,
+        1.5819509029388428,
+        -0.2244117259979248,
+        2.4846954345703125
+      ],
+      "door": [
+        -1.7124240398406982,
+        -3.20941162109375,
+        0.8563048243522644,
+        1.4610133171081543,
+        -0.995599091053009,
+        3.3706328868865967
+      ]
+    }
+  },
+  "precheck": {
+    "target": "guitar",
+    "prompt": "move guitar near door",
+    "translation": [
+      0.03364370822906493,
+      -0.5364696979522705,
+      0.0
+    ],
+    "moved_bbox": [
+      [
+        -1.3459677839279176,
+        -3.7299435138702393,
+        0.00782051682472229
+      ],
+      [
+        1.6155946111679076,
+        -0.7608814239501953,
+        2.4846954345703125
+      ]
+    ],
+    "in_bounds": false,
+    "clashes": [
+      "door"
+    ],
+    "orientation_ok": true,
+    "support_ok": true
+  },
+  "moved_points": 153455,
+  "translation": [
+    -0.22687506675720195,
+    2.8776871383190157,
+    0.0
+  ],
+  "placement_strategy": "auto_near_search",
+  "postcheck": {
+    "in_bounds": true,
+    "clashes": [],
+    "support_ok": true,
+    "orientation_ok": true
+  },
+  "hole_fill": {
+    "enabled": true,
+    "margin": 0.2,
+    "ratio": 0.35
+  }
+}

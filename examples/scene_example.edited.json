@@ -1,0 +1,77 @@
+{
+  "room_bounds": {
+    "min_xyz": [
+      -3.0,
+      -3.0,
+      0.0
+    ],
+    "max_xyz": [
+      3.0,
+      3.0,
+      2.8
+    ],
+    "floor_z": 0.0
+  },
+  "objects": [
+    {
+      "id": "chair_1",
+      "label": "chair",
+      "position": [
+        0.0,
+        2.2800000000000002,
+        0.0
+      ],
+      "rotation_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "asset_path": "assets/chair_1.ply"
+    },
+    {
+      "id": "painting_1",
+      "label": "painting",
+      "position": [
+        -1.8,
+        1.9,
+        1.4
+      ],
+      "rotation_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "asset_path": "assets/painting_1.ply"
+    },
+    {
+      "id": "painting_2",
+      "label": "painting",
+      "position": [
+        1.8,
+        1.9,
+        1.4
+      ],
+      "rotation_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "asset_path": "assets/painting_2.ply"
+    }
+  ]
+}
