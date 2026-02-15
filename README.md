@@ -29,10 +29,6 @@ run `modal volume create floorplan-volume`.
 
 ### Add Generated Assets Into Existing Scene Meshes
 
-```bash
-cd <repo-root>
-```
-
 Default (high quality):
 
 ```bash
