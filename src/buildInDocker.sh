@@ -61,6 +61,11 @@ cd eigen_build &&\
     make && make install &&\
     cd .. && rm -rf eigen_build eigen
 
+apt-get -yq update
+apt-get -yq install software-properties-common
+add-apt-repository -yq universe
+apt-get -yq update
+
 # Boost
 DEBIAN_FRONTEND=noninteractive apt-get -yq install libboost-all-dev
 
