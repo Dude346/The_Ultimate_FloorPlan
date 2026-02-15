@@ -6,6 +6,10 @@ const statusEl = document.getElementById("status");
 const fileInput = document.getElementById("fileInput");
 const overlay = document.getElementById("overlay");
 const enterButton = document.getElementById("enterButton");
+const scaleDialog = document.getElementById("scaleDialog");
+const scaleInput = document.getElementById("scaleInput");
+const scaleApplyButton = document.getElementById("scaleApplyButton");
+const scaleCancelButton = document.getElementById("scaleCancelButton");
 
 let preferCleanView = true;
 let currentHasVertexColor = false;
@@ -168,6 +172,9 @@ let heldCenterOffsetZ = 0;
 let heldCenterOffsetY = 0;
 let selectionOutline = null;
 let orbitWasEnabled = null;
+let scaleDialogOpen = false;
+let relockAfterScaleDialog = false;
+let ignoreNextUnlockEndDrag = false;
 
 function setStatus(text) {
   statusEl.textContent = text;
@@ -276,6 +283,80 @@ function restoreOrbitAfterDrag() {
   orbitWasEnabled = null;
 }
 
+function refreshHeldOffsets() {
+  if (!selected) return;
+
+  const wasVisible = selected.visible;
+  selected.visible = true;
+  selected.updateMatrixWorld(true);
+  selected.getWorldPosition(tmpWorldPos);
+  const bbox = new THREE.Box3().setFromObject(selected);
+  if (!bbox.isEmpty()) {
+    bbox.getCenter(tmpBoxCenter);
+    heldCenterOffsetX = tmpBoxCenter.x - tmpWorldPos.x;
+    heldCenterOffsetZ = tmpBoxCenter.z - tmpWorldPos.z;
+    heldCenterOffsetY = tmpBoxCenter.y - tmpWorldPos.y;
+  } else {
+    heldCenterOffsetX = 0;
+    heldCenterOffsetZ = 0;
+    heldCenterOffsetY = 0;
+  }
+  selected.visible = wasVisible;
+}
+
+function closeScaleDialog({ relock = true } = {}) {
+  if (!scaleDialog || !scaleInput) return;
+  scaleDialog.classList.add("hidden");
+  scaleDialogOpen = false;
+  if (relock && relockAfterScaleDialog && !isViewerLocked()) {
+    controls.lock();
+  }
+  relockAfterScaleDialog = false;
+}
+
+function applyScaleFromDialog() {
+  if (!heldAsset || !selected) {
+    closeScaleDialog({ relock: true });
+    return;
+  }
+  if (!scaleInput) return;
+
+  const raw = scaleInput.value.trim();
+  const parsed = Number(raw);
+  const factor = Number.isFinite(parsed) ? Math.trunc(parsed) : NaN;
+  if (!Number.isInteger(factor) || factor <= 0) {
+    setStatus("Scale must be a positive integer (1, 2, 3, ...).");
+    scaleInput.focus();
+    scaleInput.select();
+    return;
+  }
+
+  selected.scale.multiplyScalar(factor);
+  refreshHeldOffsets();
+  closeScaleDialog({ relock: true });
+  setStatus(`Scaled ${selected.userData?.assetId ?? "asset"} by x${factor}. Press G to place.`);
+}
+
+function openScaleDialog() {
+  if (!heldAsset || !selected) {
+    setStatus("Pick up an asset first (F), then press + to scale.");
+    return;
+  }
+  if (!scaleDialog || !scaleInput) return;
+
+  relockAfterScaleDialog = isViewerLocked();
+  if (relockAfterScaleDialog) {
+    ignoreNextUnlockEndDrag = true;
+    controls.unlock();
+  }
+
+  scaleInput.value = "2";
+  scaleDialog.classList.remove("hidden");
+  scaleDialogOpen = true;
+  scaleInput.focus();
+  scaleInput.select();
+}
+
 function updateHeldAssetPosition() {
   // Held assets are hidden while carried, so no per-frame movement is required.
 }
@@ -319,19 +400,7 @@ function pickUpAssetInView() {
 
   setSelection(picked);
   heldAsset = selected;
-  selected.updateMatrixWorld(true);
-  selected.getWorldPosition(tmpWorldPos);
-  const bbox = new THREE.Box3().setFromObject(selected);
-  if (!bbox.isEmpty()) {
-    bbox.getCenter(tmpBoxCenter);
-    heldCenterOffsetX = tmpBoxCenter.x - tmpWorldPos.x;
-    heldCenterOffsetZ = tmpBoxCenter.z - tmpWorldPos.z;
-    heldCenterOffsetY = tmpBoxCenter.y - tmpWorldPos.y;
-  } else {
-    heldCenterOffsetX = 0;
-    heldCenterOffsetZ = 0;
-    heldCenterOffsetY = 0;
-  }
+  refreshHeldOffsets();
   selected.visible = false;
   if (selectionOutline) {
     worldRoot.remove(selectionOutline);
@@ -379,6 +448,7 @@ function placeHeldAsset() {
 }
 
 function endDrag() {
+  closeScaleDialog({ relock: false });
   if (heldAsset) {
     heldAsset.visible = true;
   }
@@ -951,6 +1021,14 @@ window.addEventListener("drop", async (event) => {
 });
 
 window.addEventListener("keydown", (event) => {
+  if (scaleDialogOpen) {
+    if (event.code === "Escape") {
+      event.preventDefault();
+      closeScaleDialog({ relock: true });
+    }
+    return;
+  }
+
   keyState.set(event.code, true);
 
   if (event.code === "KeyF") {
@@ -959,6 +1037,11 @@ window.addEventListener("keydown", (event) => {
   }
   if (event.code === "KeyG") {
     placeHeldAsset();
+    return;
+  }
+  if (event.code === "NumpadAdd" || (event.code === "Equal" && event.shiftKey) || event.key === "+") {
+    event.preventDefault();
+    openScaleDialog();
     return;
   }
 
@@ -1013,7 +1096,11 @@ enterButton.addEventListener("click", () => {
 });
 document.addEventListener("pointerlockchange", () => {
   if (!isViewerLocked()) {
-    endDrag();
+    if (ignoreNextUnlockEndDrag) {
+      ignoreNextUnlockEndDrag = false;
+    } else {
+      endDrag();
+    }
   }
   updateOverlay();
 });
@@ -1023,8 +1110,33 @@ document.addEventListener("pointerlockerror", () => {
 });
 controls.addEventListener("lock", updateOverlay);
 controls.addEventListener("unlock", updateOverlay);
+
+if (scaleApplyButton) {
+  scaleApplyButton.addEventListener("click", () => {
+    applyScaleFromDialog();
+  });
+}
+if (scaleCancelButton) {
+  scaleCancelButton.addEventListener("click", () => {
+    closeScaleDialog({ relock: true });
+  });
+}
+if (scaleInput) {
+  scaleInput.addEventListener("keydown", (event) => {
+    if (event.code === "Enter") {
+      event.preventDefault();
+      applyScaleFromDialog();
+      return;
+    }
+    if (event.code === "Escape") {
+      event.preventDefault();
+      closeScaleDialog({ relock: true });
+    }
+  });
+}
+
 updateOverlay();
-setStatus("Click 'Click to enter' for FPS mode. Use F to pick and G to place.");
+setStatus("Click 'Click to enter' for FPS mode. Use F pick, G place, + scale.");
 
 function animate(now) {
   const dt = Math.min((now - lastTime) / 1000.0, 0.1);

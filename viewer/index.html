@@ -9,7 +9,7 @@
   <body>
     <div id="overlay" class="overlay">
       <button id="enterButton" class="enter-button">Click to enter</button>
-      <p class="overlay-hint">WASD move · E up · C down · Shift sprint · F pick · G place · Esc unlock</p>
+      <p class="overlay-hint">WASD move · E up · C down · Shift sprint · F pick · G place · + scale · Esc unlock</p>
     </div>
 
     <header class="topbar">
@@ -22,10 +22,21 @@
 
     <div id="status" class="status">Loading /model.ply ...</div>
 
+    <div id="scaleDialog" class="scale-dialog hidden">
+      <div class="scale-title">Scale Held Asset</div>
+      <label class="scale-label" for="scaleInput">Integer multiplier (e.g. 2 = 2x)</label>
+      <input id="scaleInput" class="scale-input" type="number" min="1" step="1" value="2" />
+      <div class="scale-actions">
+        <button id="scaleApplyButton" class="scale-btn">Apply</button>
+        <button id="scaleCancelButton" class="scale-btn scale-btn-secondary">Cancel</button>
+      </div>
+    </div>
+
     <section class="help">
       <div>Click "Click to enter": lock pointer / start FPS mode</div>
       <div>F: pick asset in center view (look mode, hides while carried)</div>
       <div>G: place held asset in free 3D space (look mode)</div>
+      <div>+: open scale textbox for held asset</div>
       <div>W/A/S/D: move</div>
       <div>E: rise</div>
       <div>C: descend</div>
