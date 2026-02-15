@@ -65,6 +65,30 @@ uv run python scripts/generate_and_place_shap_e_asset.py \
   --output examples/Bathroom_With_Green_Office_Chair_tuned.ply
 ```
 
+### Interactive World Viewer (Auto-Detect)
+
+```bash
+cd viewer
+npm install
+npm run dev:world -- --file ../examples/Bathroom_With_Green_Office_Chair.ply
+```
+
+Use the same command for point-cloud PLY, mesh PLY, or GLB:
+
+```bash
+cd viewer
+npm run dev:world -- --file ../examples/Bathroom_Mesh.ply
+```
+
+```bash
+cd viewer
+npm run dev:world -- --file ../examples/Living_Room_Mesh.glb
+```
+
+What it does:
+- `.ply` input: auto-detects point cloud vs mesh from PLY header and opens the PLY FPS viewer (`/`).
+- `.glb` input: opens the GLB FPS viewer (`/index_glb.html`).
+
 # Quotes
 
 > Ashwin is the alpha wolf.

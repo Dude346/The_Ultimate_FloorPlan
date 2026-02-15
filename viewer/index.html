@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PLY Mesh Viewer</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div id="overlay" class="overlay">
+      <button id="enterButton" class="enter-button">Click to enter</button>
+      <p class="overlay-hint">WASD move · E up · C down · Shift sprint · Esc unlock</p>
+    </div>
+
+    <header class="topbar">
+      <div class="title">PLY Mesh Viewer</div>
+      <div class="actions">
+        <label class="file-btn" for="fileInput">Open PLY</label>
+        <input id="fileInput" type="file" accept=".ply" />
+      </div>
+    </header>
+
+    <div id="status" class="status">Loading /model.ply ...</div>
+
+    <section class="help">
+      <div>Click: pointer lock</div>
+      <div>W/A/S/D: move</div>
+      <div>E: rise</div>
+      <div>C: descend</div>
+      <div>Shift: sprint</div>
+      <div>T: clean/raw color</div>
+      <div>Open/drag-drop .ply supported</div>
+    </section>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
