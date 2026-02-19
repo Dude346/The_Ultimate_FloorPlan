@@ -3,6 +3,9 @@
 ### The Ultimate Floor Plan BOOM TreeHacks 2026
 Youtube Demo: https://youtu.be/1rtGnGzZgrw
 
+[![Watch the video](https://img.youtube.com/vi/1rtGnGzZgrw/hqdefault.jpg)](https://www.youtube.com/watch?v=1rtGnGzZgrw)
+
+
 ## Setup
 
 ```bash
