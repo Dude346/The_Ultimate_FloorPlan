@@ -3,7 +3,11 @@
 ### The Ultimate Floor Plan BOOM TreeHacks 2026
 Youtube Demo: https://youtu.be/1rtGnGzZgrw
 
-[![Watch the video](https://img.youtube.com/vi/1rtGnGzZgrw/hqdefault.jpg)](https://www.youtube.com/watch?v=1rtGnGzZgrw)
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=1rtGnGzZgrw">
+    <img src="https://img.youtube.com/vi/1rtGnGzZgrw/hqdefault.jpg" alt="Watch the video" width="600">
+  </a>
+</p>
 
 
 ## Setup
